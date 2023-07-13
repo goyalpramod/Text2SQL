@@ -437,6 +437,14 @@ class postgresql_database(Database):
             # return False
 
 
+class sqlite_database(Database):
+    async def get_connection():
+        try:
+            pass
+        except Exception as e:
+            logging.error(f"ERROR: {e}, {traceback.print_exc()}")
+            raise Exception("Failed to connect to db")
+
 class database_factory:
     def get_database_connection(self, schema_type):
         if(schema_type == 'postgresql'):
@@ -444,4 +452,7 @@ class database_factory:
             return db
         elif schema_type == 'mysql':
             db = mysql_database()
+            return db
+        elif schema_type == 'sqlite':
+            db = sqlite_database()
             return db
