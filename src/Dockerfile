@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y libgraphviz-dev graphviz
 RUN pip install -r requirements.txt
 RUN pip install -r src/server/sql_graph/requirements.txt
 ENV LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/graphviz
-RUN pip install --global-option=build_ext --global-option="-I/usr/include/graphviz" --global-option="-L/usr/lib/x86_64-linux-gnu/" --install-option="--library-path=/usr/lib/x86_64-linux-gnu/graphviz" pygraphviz
+# RUN pip install --global-option=build_ext --global-option="-I/usr/include/graphviz" --global-option="-L/usr/lib/x86_64-linux-gnu/" --install-option="--library-path=/usr/lib/x86_64-linux-gnu/graphviz" pygraphviz
+RUN LDFLAGS="-L/usr/lib/x86_64-linux-gnu/" CFLAGS="-I/usr/include/graphviz" pip install pygraphviz
 EXPOSE 5078
 CMD ["python", "src/server/app.py"]
