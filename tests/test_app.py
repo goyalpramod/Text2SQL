@@ -58,10 +58,10 @@ def upload_schema(schema_type,schema_file_path,schema_name):
     except requests.exceptions.RequestException as err:
         print("OOps: Something Else", err)
 
-def run_prompt():
+def run_prompt(prompt, schema_id):
     url = "https://5078-samagradevelop-text2sql-vyuj3zukgl4.ws-us102.gitpod.io/prompt/v3"
-    prompt = "How many columns are there in the database"
-    schema_id = "d136f7ee-842b-4ed6-947d-dadfc79c2f4f"
+    prompt = prompt
+    schema_id = schema_id
     headers = {
         "Content-Type": "application/json",
         "Cookie": "csrftoken=SWTHvaNeh4g3KImyRotjdDcMYuiW0dw4ctce3LXEkRWHJx71t7nKMLCk70wSdSSB"
