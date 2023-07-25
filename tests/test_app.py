@@ -1,10 +1,11 @@
 import requests
 import json
 import base64
+import os
 
 def upload_schema(schema_type,schema_file_path,schema_name):
     # Set the API endpoint URL
-    API_ENDPOINT = "https://5078-samagradevelop-text2sql-wts1kqivc9t.ws-us102.gitpod.io/onboard"
+    API_ENDPOINT = "https://5078-samagradevelop-text2sql-vyuj3zukgl4.ws-us102.gitpod.io/onboard"
 
     # Set the path to the schema file
     SCHEMA_FILE = schema_file_path
@@ -45,9 +46,9 @@ def upload_schema(schema_type,schema_file_path,schema_name):
 
         # Extract the schema ID from the response
         schema_id = response_json["result"]["data"]["schema_id"]
+        print("Request was successful!")
+        print(f"Schema ID: {schema_id}")
         return schema_id
-        # print("Request was successful!")
-        # print(f"Schema ID: {schema_id}")
     except requests.exceptions.HTTPError as errh:
         print("Http Error:", errh)
     except requests.exceptions.ConnectionError as errc:
@@ -58,9 +59,9 @@ def upload_schema(schema_type,schema_file_path,schema_name):
         print("OOps: Something Else", err)
 
 def run_prompt():
-    url = "https://<Paste the same url as of step 8>/prompt/v3"
-    prompt = "<Enter your prompt>"
-    schema_id = "<Paste your schema id>"
+    url = "https://5078-samagradevelop-text2sql-vyuj3zukgl4.ws-us102.gitpod.io/prompt/v3"
+    prompt = "How many columns are there in the database"
+    schema_id = "d136f7ee-842b-4ed6-947d-dadfc79c2f4f"
     headers = {
         "Content-Type": "application/json",
         "Cookie": "csrftoken=SWTHvaNeh4g3KImyRotjdDcMYuiW0dw4ctce3LXEkRWHJx71t7nKMLCk70wSdSSB"
@@ -86,3 +87,19 @@ def run_prompt():
     except requests.exceptions.RequestException as err:
         print("OOps: Something Else", err)
 
+def find_schema_files(directory):
+    schema_dictionary = {}
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file == "schema.sql":
+                schema_type = 'sqlite'
+                schema_file_path = os.path.join(root, file)
+                schema_name = os.path.basename(os.path.dirname(schema_file_path))
+                schema_id = upload_schema(schema_type, schema_file_path, schema_name)
+                schema_dictionary[schema_name] = schema_id
+
+
+# upload_schema(schema_type='sqlite' , schema_name='new_schema' , schema_file_path='/workspace/Text2SQL/schema.sql')
+# run_prompt()
+dict_ = find_schema_files('/workspace/Text2SQL/database')
+print(dict_)
