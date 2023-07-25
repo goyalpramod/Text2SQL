@@ -97,9 +97,11 @@ def find_schema_files(directory):
                 schema_name = os.path.basename(os.path.dirname(schema_file_path))
                 schema_id = upload_schema(schema_type, schema_file_path, schema_name)
                 schema_dictionary[schema_name] = schema_id
+    return schema_dictionary
 
 
 # upload_schema(schema_type='sqlite' , schema_name='new_schema' , schema_file_path='/workspace/Text2SQL/schema.sql')
 # run_prompt()
-dict_ = find_schema_files('/workspace/Text2SQL/database')
-print(dict_)
+schema_results = find_schema_files('/workspace/Text2SQL/database')
+for schema_name, result in schema_results.items():
+        print(f"Schema: {schema_name} Result: {result}")
