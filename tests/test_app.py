@@ -5,7 +5,7 @@ import os
 
 def upload_schema(schema_type,schema_file_path,schema_name):
     # Set the API endpoint URL
-    API_ENDPOINT = "https://5078-samagradevelop-text2sql-vyuj3zukgl4.ws-us102.gitpod.io/onboard"
+    API_ENDPOINT = "<Paste the link for port 5078>/onboard"
 
     # Set the path to the schema file
     SCHEMA_FILE = schema_file_path
@@ -59,7 +59,7 @@ def upload_schema(schema_type,schema_file_path,schema_name):
         print("OOps: Something Else", err)
 
 def run_prompt(prompt, schema_id):
-    url = "https://5078-samagradevelop-text2sql-vyuj3zukgl4.ws-us102.gitpod.io/prompt/v3"
+    url = "<Paste the link for port 5078>/prompt/v3"
     prompt = prompt
     schema_id = schema_id
     headers = {
@@ -75,6 +75,9 @@ def run_prompt(prompt, schema_id):
     try:
         response = requests.post(url, json=data, headers=headers, auth=auth)
         response.raise_for_status()
+        json_response = response.json()
+        query_data = json_response.get('result', {}).get('data', {}).get('query', [])
+        return query_data
         print("Request was successful!")
         print("Response:")
         print(response.json())  # If the response is in JSON format
@@ -103,8 +106,20 @@ def load_test_file():
     with open('test_list.json') as file:
         loaded_list = json.load(file)
     return loaded_list
-# upload_schema(schema_type='sqlite' , schema_name='new_schema' , schema_file_path='/workspace/Text2SQL/schema.sql')
-# run_prompt()
+
+preds_ = []
+
 schema_results = find_schema_files('/workspace/Text2SQL/database')
-for schema_name, result in schema_results.items():
-        print(f"Schema: {schema_name} Result: {result}")
+# for schema_name, result in schema_results.items():
+#         print(f"Schema: {schema_name} Result: {result}")
+
+
+test_list = load_test_file()
+for i in range(len(test_list)):
+    prompt = test_list[i][1]
+    schema_id = schema_results[test_list[i][0]]
+    query_response = run_prompt(prompt, schema_id)
+    preds_.append(query_response)
+    # return the response from run_prompt and store that in a list and that list is the preds file
+
+print(preds_)
