@@ -99,7 +99,10 @@ def find_schema_files(directory):
                 schema_dictionary[schema_name] = schema_id
     return schema_dictionary
 
-
+def load_test_file():
+    with open('test_list.json') as file:
+        loaded_list = json.load(file)
+    return loaded_list
 # upload_schema(schema_type='sqlite' , schema_name='new_schema' , schema_file_path='/workspace/Text2SQL/schema.sql')
 # run_prompt()
 schema_results = find_schema_files('/workspace/Text2SQL/database')
