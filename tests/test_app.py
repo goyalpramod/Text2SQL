@@ -5,7 +5,7 @@ import os
 
 def upload_schema(schema_type,schema_file_path,schema_name):
     # Set the API endpoint URL
-    API_ENDPOINT = "<Paste the link for port 5078>/onboard"
+    API_ENDPOINT = "<link here>/onboard"
 
     # Set the path to the schema file
     SCHEMA_FILE = schema_file_path
@@ -48,18 +48,23 @@ def upload_schema(schema_type,schema_file_path,schema_name):
         schema_id = response_json["result"]["data"]["schema_id"]
         print("Request was successful!")
         print(f"Schema ID: {schema_id}")
+        print(schema_name)
         return schema_id
     except requests.exceptions.HTTPError as errh:
         print("Http Error:", errh)
+        print(schema_name)
     except requests.exceptions.ConnectionError as errc:
         print("Error Connecting:", errc)
+        print(schema_name)
     except requests.exceptions.Timeout as errt:
         print("Timeout Error:", errt)
+        print(schema_name)
     except requests.exceptions.RequestException as err:
+        print(schema_name)
         print("OOps: Something Else", err)
 
 def run_prompt(prompt, schema_id):
-    url = "<Paste the link for port 5078>/prompt/v3"
+    url = "<link here>/prompt/v3"
     prompt = prompt
     schema_id = schema_id
     headers = {
@@ -83,12 +88,16 @@ def run_prompt(prompt, schema_id):
         print(response.json())  # If the response is in JSON format
     except requests.exceptions.HTTPError as errh:
         print("Http Error:", errh)
+        print(schema_id)
     except requests.exceptions.ConnectionError as errc:
         print("Error Connecting:", errc)
+        print(schema_id)
     except requests.exceptions.Timeout as errt:
         print("Timeout Error:", errt)
+        print(schema_id)
     except requests.exceptions.RequestException as err:
         print("OOps: Something Else", err)
+        print(schema_id)
 
 def find_schema_files(directory):
     schema_dictionary = {}
@@ -109,7 +118,11 @@ def load_test_file():
 
 preds_ = []
 
-schema_results = find_schema_files('/workspace/Text2SQL/database')
+schema_results = find_schema_files('/workspace/Text2SQL/database_1')
+# prompt = "How many tables are there?"
+# schema_id = schema_results['academic']
+# query_response = run_prompt(prompt, schema_id)
+# print(query_response)
 # for schema_name, result in schema_results.items():
 #         print(f"Schema: {schema_name} Result: {result}")
 
@@ -123,3 +136,9 @@ for i in range(len(test_list)):
     # return the response from run_prompt and store that in a list and that list is the preds file
 
 print(preds_)
+
+with open('result.txt', 'w') as file:
+    for item in preds_:
+        file.write(str(item) + '\n')
+
+print("List has been stored in 'result.txt'")
